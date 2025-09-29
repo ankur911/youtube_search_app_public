@@ -51,9 +51,13 @@ def main():
         layout="wide"
     )
     
-    # Initialize session state for video display
+    # Initialize session state for video display and search results
     if 'video_states' not in st.session_state:
         st.session_state.video_states = {}
+    if 'search_results' not in st.session_state:
+        st.session_state.search_results = []
+    if 'last_search_term' not in st.session_state:
+        st.session_state.last_search_term = ""
     
     # Custom CSS for better video embedding
     st.markdown("""
@@ -101,6 +105,17 @@ def main():
         
         # Search button
         search_button = st.button("Search Videos", type="primary")
+        
+        # Clear results button (only show if there are results)
+        if st.session_state.search_results:
+            if st.button("🗑️ Clear Results", type="secondary"):
+                st.session_state.search_results = []
+                st.session_state.last_search_term = ""
+                # Clear all video states
+                for key in list(st.session_state.keys()):
+                    if key.startswith("show_video_"):
+                        del st.session_state[key]
+                st.rerun()
         
         # Additional search options (optional)
         with st.expander("Advanced Options"):
@@ -182,73 +197,83 @@ def main():
                     published_before=published_before_iso
                 )
                 
-                if videos:
-                    st.success(f"Found {len(videos)} videos for: **{search_string}**")
-                    
-                    # Display results
-                    for i, item in enumerate(videos, 1):
-                        title = item['snippet']['title']
-                        channel = item['snippet']['channelTitle']
-                        video_id = item['id']['videoId']
-                        published = item['snippet']['publishedAt']
-                        description = item['snippet']['description']
-                        thumbnail_url = item['snippet']['thumbnails']['medium']['url']
-                        video_url = f"https://www.youtube.com/watch?v={video_id}"
-                        
-                        # Create a card-like display for each video
-                        with st.container():
-                            st.markdown("---")
-                            
-                            # Create columns for thumbnail and info
-                            thumb_col, info_col = st.columns([1, 3])
-                            
-                            with thumb_col:
-                                st.image(thumbnail_url, width=150)
-                            
-                            with info_col:
-                                st.markdown(f"**{i}. {title}**")
-                                st.markdown(f"📺 **Channel:** {channel}")
-                                st.markdown(f"📅 **Published:** {published[:10]}")
-                                st.markdown(f"🔗 **URL:** {video_url}")
-                                
-                                # Add embedded video player
-                                play_button_key = f"play_video_{i}_{video_id}"
-                                if st.button(f"▶️ Play Video", key=play_button_key, type="secondary"):
-                                    st.session_state[f"show_video_{video_id}"] = True
-                                
-                                # Show embedded video if play button was clicked
-                                if st.session_state.get(f"show_video_{video_id}", False):
-                                    st.markdown('<div class="video-title">🎬 Now Playing:</div>', unsafe_allow_html=True)
-                                    # Embed YouTube video using iframe with responsive design
-                                    embed_url = f"https://www.youtube.com/embed/{video_id}?autoplay=1&rel=0&modestbranding=1"
-                                    st.markdown(f"""
-                                    <div class="video-container">
-                                        <iframe 
-                                        src="{embed_url}" 
-                                        frameborder="0" 
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                                        allowfullscreen>
-                                        </iframe>
-                                    </div>
-                                    """, unsafe_allow_html=True)
-                                    
-                                    # Add a button to hide the video
-                                    hide_button_key = f"hide_video_{i}_{video_id}"
-                                    if st.button("❌ Close Video", key=hide_button_key):
-                                        st.session_state[f"show_video_{video_id}"] = False
-                                        st.rerun()
-                                
-                                # Add external link as backup
-                                st.markdown(f"[🔗 Open in YouTube]({video_url})")
-                                
-                                # Show description (truncated)
-                                if description:
-                                    desc_preview = description[:200] + "..." if len(description) > 200 else description
-                                    with st.expander("📝 Description"):
-                                        st.write(desc_preview)
+                # Store results in session state
+                st.session_state.search_results = videos
+                st.session_state.last_search_term = search_string
+        
+        # Display results from session state (if any)
+        if st.session_state.search_results:
+            videos = st.session_state.search_results
+            search_string = st.session_state.last_search_term
+            
+            if videos:
+                st.success(f"Found {len(videos)} videos for: **{search_string}**")
                 
-                else:
-                    st.warning("No videos found. Try different search terms.")
+                # Display results
+                for i, item in enumerate(videos, 1):
+                    title = item['snippet']['title']
+                    channel = item['snippet']['channelTitle']
+                    video_id = item['id']['videoId']
+                    published = item['snippet']['publishedAt']
+                    description = item['snippet']['description']
+                    thumbnail_url = item['snippet']['thumbnails']['medium']['url']
+                    video_url = f"https://www.youtube.com/watch?v={video_id}"
+                    
+                    # Create a card-like display for each video
+                    with st.container():
+                        st.markdown("---")
+                        
+                        # Create columns for thumbnail and info
+                        thumb_col, info_col = st.columns([1, 3])
+                        
+                        with thumb_col:
+                            st.image(thumbnail_url, width=150)
+                        
+                        with info_col:
+                            st.markdown(f"**{i}. {title}**")
+                            st.markdown(f"📺 **Channel:** {channel}")
+                            st.markdown(f"📅 **Published:** {published[:10]}")
+                            st.markdown(f"🔗 **URL:** {video_url}")
+                            
+                            # Add embedded video player
+                            play_button_key = f"play_video_{i}_{video_id}"
+                            if st.button(f"▶️ Play Video", key=play_button_key, type="secondary"):
+                                st.session_state[f"show_video_{video_id}"] = True
+                                st.rerun()
+                            
+                            # Show embedded video if play button was clicked
+                            if st.session_state.get(f"show_video_{video_id}", False):
+                                st.markdown('<div class="video-title">🎬 Now Playing:</div>', unsafe_allow_html=True)
+                                # Embed YouTube video using iframe with responsive design
+                                embed_url = f"https://www.youtube.com/embed/{video_id}?autoplay=1&rel=0&modestbranding=1"
+                                st.markdown(f"""
+                                <div class="video-container">
+                                    <iframe 
+                                    src="{embed_url}" 
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                    allowfullscreen>
+                                    </iframe>
+                                </div>
+                                """, unsafe_allow_html=True)
+                                
+                                # Add a button to hide the video
+                                hide_button_key = f"hide_video_{i}_{video_id}"
+                                if st.button("❌ Close Video", key=hide_button_key):
+                                    st.session_state[f"show_video_{video_id}"] = False
+                                    st.rerun()
+                            
+                            # Add external link as backup
+                            st.markdown(f"[🔗 Open in YouTube]({video_url})")
+                            
+                            # Show description (truncated)
+                            if description:
+                                desc_preview = description[:200] + "..." if len(description) > 200 else description
+                                with st.expander("📝 Description"):
+                                    st.write(desc_preview)
+            
+            else:
+                st.warning("No videos found. Try different search terms.")
         
         elif search_button and not search_string:
             st.warning("Please enter a search term.")
