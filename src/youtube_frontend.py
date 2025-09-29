@@ -51,8 +51,40 @@ def main():
         layout="wide"
     )
     
+    # Initialize session state for video display
+    if 'video_states' not in st.session_state:
+        st.session_state.video_states = {}
+    
+    # Custom CSS for better video embedding
+    st.markdown("""
+    <style>
+    .video-container {
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    }
+    .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .video-title {
+        background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
     st.title("🎥 YouTube Video Search")
-    st.markdown("Search for YouTube videos and get direct links!")
+    st.markdown("Search for YouTube videos and play them directly in the app!")
     
     # Create two columns for better layout
     col1, col2 = st.columns([1, 2])
@@ -179,8 +211,35 @@ def main():
                                 st.markdown(f"📅 **Published:** {published[:10]}")
                                 st.markdown(f"🔗 **URL:** {video_url}")
                                 
-                                # Add a clickable link
-                                st.markdown(f"[▶️ Watch Video]({video_url})")
+                                # Add embedded video player
+                                play_button_key = f"play_video_{i}_{video_id}"
+                                if st.button(f"▶️ Play Video", key=play_button_key, type="secondary"):
+                                    st.session_state[f"show_video_{video_id}"] = True
+                                
+                                # Show embedded video if play button was clicked
+                                if st.session_state.get(f"show_video_{video_id}", False):
+                                    st.markdown('<div class="video-title">🎬 Now Playing:</div>', unsafe_allow_html=True)
+                                    # Embed YouTube video using iframe with responsive design
+                                    embed_url = f"https://www.youtube.com/embed/{video_id}?autoplay=1&rel=0&modestbranding=1"
+                                    st.markdown(f"""
+                                    <div class="video-container">
+                                        <iframe 
+                                        src="{embed_url}" 
+                                        frameborder="0" 
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                        allowfullscreen>
+                                        </iframe>
+                                    </div>
+                                    """, unsafe_allow_html=True)
+                                    
+                                    # Add a button to hide the video
+                                    hide_button_key = f"hide_video_{i}_{video_id}"
+                                    if st.button("❌ Close Video", key=hide_button_key):
+                                        st.session_state[f"show_video_{video_id}"] = False
+                                        st.rerun()
+                                
+                                # Add external link as backup
+                                st.markdown(f"[🔗 Open in YouTube]({video_url})")
                                 
                                 # Show description (truncated)
                                 if description:
