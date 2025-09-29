@@ -28,8 +28,8 @@ A powerful YouTube search application with multiple interfaces built using the Y
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/ankur911/Youtube.git
-cd Youtube
+git clone https://github.com/ankur911/youtube_search_app.git
+cd youtube_search_app
 ```
 
 ### 2. Set Up Virtual Environment
