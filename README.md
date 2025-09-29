@@ -7,11 +7,21 @@ A powerful YouTube search application with multiple interfaces built using the Y
 ![Gradio](https://img.shields.io/badge/gradio-5.6.0-orange.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
+## 🆕 Recent Updates
+
+### 🎬 v2.0 - Embedded Video Player (September 2025)
+- ✨ **NEW**: Play YouTube videos directly in the Streamlit interface
+- ✨ **NEW**: Responsive video player with professional styling
+- ✨ **NEW**: Session state management for persistent search results
+- ✨ **NEW**: Clear Results functionality for better user experience
+- 🔧 **IMPROVED**: Enhanced UI/UX with better video controls
+
 ## ✨ Features
 
 - 🔍 **Advanced YouTube Search** with customizable filters
 - 🌐 **Streamlit Web Interface** - Modern, responsive UI with thumbnails
-- 🎛️ **Gradio Interface** - Simple, clean alternative interface
+- � **Embedded Video Player** - Play YouTube videos directly in the app without leaving the interface
+- �🎛️ **Gradio Interface** - Simple, clean alternative interface
 - 💻 **Console Version** - Command-line interface for automation
 - ⚙️ **Advanced Filtering Options**:
   - Video duration (short/medium/long)
@@ -23,6 +33,32 @@ A powerful YouTube search application with multiple interfaces built using the Y
 - 🔒 **Secure API Key Management**
 - 🐍 **Virtual Environment Support**
 - 📋 **Easy Setup Scripts**
+
+## 🎬 Embedded Video Player (NEW!)
+
+The Streamlit interface now features an **embedded video player** that allows you to watch YouTube videos directly within the application without being redirected to YouTube.
+
+### 🌟 Key Features:
+- **▶️ Play Button**: Each search result includes a "Play Video" button
+- **🎥 In-App Playback**: Videos play directly in the interface using YouTube's embed player
+- **📱 Responsive Design**: Video player adapts to different screen sizes
+- **❌ Close Video**: Easy-to-use close button to hide the video player
+- **🔄 Persistent Results**: Search results remain visible while playing videos
+- **🗑️ Clear Results**: One-click button to clear all results and start fresh
+
+### 🚀 How to Use:
+1. **Search** for videos using the search interface
+2. **Click "▶️ Play Video"** on any result you want to watch
+3. **Enjoy** the video playing directly in your app
+4. **Click "❌ Close Video"** when you're done watching
+5. **Use "🗑️ Clear Results"** to start a new search
+
+### 🔧 Technical Details:
+- Uses YouTube's official embed API for secure video playback
+- Implements session state management for smooth user experience
+- Features responsive CSS styling with 16:9 aspect ratio
+- Includes autoplay functionality and reduced YouTube branding
+- Maintains search context across all interactions
 
 ## 🚀 Quick Start
 
@@ -109,8 +145,8 @@ youtube-search-app/
 
 ### 🌐 Streamlit Interface
 - **URL**: http://localhost:8501
-- **Features**: Modern UI, video thumbnails, interactive controls
-- **Best for**: General use, presentation, visual browsing
+- **Features**: Modern UI, video thumbnails, interactive controls, **embedded video player**
+- **Best for**: General use, presentation, visual browsing, **in-app video watching**
 
 ### 🎛️ Gradio Interface
 - **URL**: Auto-opens in browser (usually http://localhost:7860)
@@ -212,6 +248,14 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt -v
 ```
 
+#### Embedded Video Not Playing
+```bash
+# Check if your browser blocks iframes
+# Try in a different browser (Chrome, Firefox, Edge)
+# Ensure you have a stable internet connection
+# Some videos may not be embeddable due to YouTube restrictions
+```
+
 ## 📊 Usage Examples
 
 ### Streamlit Interface
@@ -220,6 +264,9 @@ pip install -r requirements.txt -v
 3. Expand "Advanced Options" for filtering
 4. Click "Search Videos"
 5. Browse results with thumbnails and direct links
+6. **Click "▶️ Play Video"** to watch videos directly in the app
+7. **Use "❌ Close Video"** to hide the player when done
+8. **Click "🗑️ Clear Results"** to start a fresh search
 
 ### Console Usage
 ```python
