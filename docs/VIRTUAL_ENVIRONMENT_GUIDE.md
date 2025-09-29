@@ -1,11 +1,16 @@
 # 🚀 How to Run YouTube Search App from Virtual Environment
-
-## ✅ Quick Start (Recommended)
+| Command | Description |
+|---------|-------------|
+| `.\run_launcher.ps1` | Interactive launcher (PowerShell) |
+| `run_venv.bat` | Interactive launcher (Command Prompt) |
+| `python -m streamlit run src/youtube_frontend.py` | Run Streamlit app |
+| `python src/youtube_gradio.py` | Run Gradio app |
+| `python src/youtube_search.py` | Run console version |Quick Start (Recommended)
 
 ### Option 1: Use the Launcher Scripts
 ```powershell
 # PowerShell (Recommended)
-.\run_venv.ps1
+.\run_launcher.ps1
 
 # OR Command Prompt
 run_venv.bat

@@ -111,7 +111,7 @@ Use the provided launcher script for easy access:
 
 ```bash
 # Windows PowerShell
-.\run_venv.ps1
+.\run_launcher.ps1
 
 # This script will:
 # 1. Activate virtual environment

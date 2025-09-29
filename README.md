@@ -67,7 +67,7 @@ API_KEY=your_actual_api_key_here
 #### 🎯 Easy Way (Recommended)
 ```bash
 # Use the launcher script
-.\run_venv.ps1  # Windows PowerShell
+.\run_launcher.ps1  # Windows PowerShell
 ```
 
 #### 🔧 Manual Way
@@ -90,7 +90,7 @@ youtube-search-app/
 ├── 📄 requirements.txt             # Python dependencies
 ├── 📄 .gitignore                   # Git ignore rules
 ├── 📄 .env                         # API key (not tracked by git)
-├── 📄 run_venv.ps1                 # Main launcher script
+├── 📄 run_launcher.ps1             # Main launcher script
 ├── 📁 src/                         # Source code
 │   ├── 🐍 youtube_search.py        # Core search functionality
 │   ├── 🌐 youtube_frontend.py      # Streamlit web interface
